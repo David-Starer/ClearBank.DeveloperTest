@@ -8,8 +8,15 @@ using Xunit;
 
 namespace ClearBank.DeveloperTest.Tests;
 
-public class PaymentServiceTests 
+public class AccountServiceTests 
 {
+    private readonly AccountService _accountService;
+
+    public AccountServiceTests()
+    {
+        _accountService = new AccountService();
+    }
+
     [Fact]
     public void WhenPaymentMade_AndPaymentSchemeIsBacs_ThenAccountIsUpdatedWithCorrectAmount()
     {
@@ -21,8 +28,7 @@ public class PaymentServiceTests
         var account = new Account{ AllowedPaymentSchemes = AllowedPaymentSchemes.Bacs };
 
         // Act
-        var accountService = new AccountService();
-        accountService.PayFromAccount(request, account, accountDataStoreMock.Object);
+        _accountService.PayFromAccount(request, account, accountDataStoreMock.Object);
 
         // Assert
         accountDataStoreMock.Verify(x => x.UpdateAccount(account, request.Amount), Times.Once);
@@ -39,8 +45,7 @@ public class PaymentServiceTests
         var account = new Account { AllowedPaymentSchemes = AllowedPaymentSchemes.Chaps | AllowedPaymentSchemes.FasterPayments};
 
         // Act
-        var accountService = new AccountService();
-        var act = () => accountService.PayFromAccount(request, account, accountDataStoreMock.Object);
+        var act = () => _accountService.PayFromAccount(request, account, accountDataStoreMock.Object);
 
         // Assert
         act.Should().Throw<ArgumentOutOfRangeException>();
@@ -61,8 +66,7 @@ public class PaymentServiceTests
         };
 
         // Act
-        var accountService = new AccountService();
-        accountService.PayFromAccount(request, account, accountDataStoreMock.Object);
+        _accountService.PayFromAccount(request, account, accountDataStoreMock.Object);
 
         // Assert
         accountDataStoreMock.Verify(x => x.UpdateAccount(account, request.Amount), Times.Once);
@@ -84,8 +88,7 @@ public class PaymentServiceTests
         };
 
         // Act
-        var accountService = new AccountService();
-        var act = () => accountService.PayFromAccount(request, account, accountDataStoreMock.Object);
+        var act = () => _accountService.PayFromAccount(request, account, accountDataStoreMock.Object);
 
         // Assert
         act.Should().Throw<ArgumentOutOfRangeException>();
@@ -102,8 +105,7 @@ public class PaymentServiceTests
         var account = new Account { AllowedPaymentSchemes = AllowedPaymentSchemes.Chaps };
 
         // Act
-        var accountService = new AccountService();
-        accountService.PayFromAccount(request, account, accountDataStoreMock.Object);
+        _accountService.PayFromAccount(request, account, accountDataStoreMock.Object);
 
         // Assert
         accountDataStoreMock.Verify(x => x.UpdateAccount(account, request.Amount), Times.Once);
@@ -120,8 +122,7 @@ public class PaymentServiceTests
         var account = new Account { AllowedPaymentSchemes = AllowedPaymentSchemes.FasterPayments | AllowedPaymentSchemes.Bacs };
 
         // Act
-        var accountService = new AccountService();
-        var act = () => accountService.PayFromAccount(request, account, accountDataStoreMock.Object);
+        var act = () => _accountService.PayFromAccount(request, account, accountDataStoreMock.Object);
 
         // Assert
         act.Should().Throw<ArgumentOutOfRangeException>();
@@ -138,8 +139,7 @@ public class PaymentServiceTests
         var account = new Account { AllowedPaymentSchemes = AllowedPaymentSchemes.Chaps, Status = AccountStatus.Disabled};
 
         // Act
-        var accountService = new AccountService();
-        var act = () => accountService.PayFromAccount(request, account, accountDataStoreMock.Object);
+        var act = () => _accountService.PayFromAccount(request, account, accountDataStoreMock.Object);
 
         // Assert
         act.Should().Throw<ArgumentOutOfRangeException>();
